@@ -1,6 +1,7 @@
 require 'puppet'
 require 'pathname'
 require 'puppet/type/x509_cert'
+require 'puppet/util/ini_file'
 
 RSpec.configure { |c| c.mock_with :mocha }
 
@@ -15,7 +16,7 @@ describe 'The openssl provider for the x509_cert type' do
       File.stubs(:read).returns('')
       c = OpenSSL::X509::Certificate.new
       OpenSSL::X509::Certificate.stubs(:new).returns(c)
-      IniFile.stubs(:load).returns([])
+      Puppet::Util::IniFile.stubs(:new).returns([])
       expect(subject.exists?).to eq(true)
     end
 
@@ -55,7 +56,7 @@ describe 'The openssl provider for the x509_cert type' do
     it 'exists? should return true if certificate exists and is synced' do
       resource[:force] = true
       File.stubs(:read)
-      IniFile.stubs(:load).returns([])
+      Puppet::Util::IniFile.stubs(:new).returns([])
       Pathname.any_instance.expects(:exist?).returns(true)
       c = OpenSSL::X509::Certificate.new # Fake certificate for mocking
       OpenSSL::X509::Certificate.stubs(:new).returns(c)
